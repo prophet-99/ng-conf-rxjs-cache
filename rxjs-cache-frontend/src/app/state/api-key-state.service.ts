@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { Observable, of, switchMap, timer } from 'rxjs';
+import { EMPTY, Observable, of, shareReplay, switchMap, timer } from 'rxjs';
 
 import { environment } from '../../environments/environment.development';
 
@@ -10,24 +10,18 @@ import { environment } from '../../environments/environment.development';
 })
 export class ApiKeyStateService {
   private _CACHE_TIME = 10_000;
-  private _apiKey!: string;
+  private _apiKey$!: Observable<{ apiKey: string }> | null;
 
-  constructor(private _httpClient: HttpClient) {
-    timer(0, this._CACHE_TIME)
-      .pipe(
-        switchMap(() =>
-          this._httpClient.get<{ apiKey: string }>(
-            `${environment.baseApiUrl}/api-key`
-          )
-        )
-      )
-      .subscribe(({ apiKey }) => {
-        this._apiKey = apiKey;
-        console.log('==> Refresh the Api Key', apiKey);
-      });
-  }
+  constructor(private _httpClient: HttpClient) {}
 
+  //* -> IT'S LIKE A FACTORY
   public getApiKey$(): Observable<{ apiKey: string }> {
-    return of({ apiKey: this._apiKey });
+    if (this._apiKey$) return this._apiKey$;
+
+    this._apiKey$ = this._httpClient
+      .get<{ apiKey: string }>(`${environment.baseApiUrl}/api-key`)
+      .pipe(shareReplay());
+    setTimeout(() => (this._apiKey$ = null), this._CACHE_TIME);
+    return this._apiKey$;
   }
 }
