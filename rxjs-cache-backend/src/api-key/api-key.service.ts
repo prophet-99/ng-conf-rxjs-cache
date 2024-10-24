@@ -17,8 +17,8 @@ export class ApiKeyService {
     const newApiKey = Math.random().toString(36).substring(2);
     // * Validez de 10 segundos a 30 días
     // const validityPeriod = Math.floor(Math.random() * 2592000) + 10;
-    // * Validez de 10 segundos a 60 segundos
-    const validityPeriod = Math.floor(Math.random() * 50) + 10;
+    // * Validez de 10 segundos a 30 segundos
+    const validityPeriod = Math.floor(Math.random() * 20) + 10;
     const expiresAt = Date.now() + validityPeriod * 1000;
 
     this.apiKeys.push({ key: newApiKey, expiresAt });
