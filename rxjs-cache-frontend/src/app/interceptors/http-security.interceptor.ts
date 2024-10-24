@@ -27,7 +27,7 @@ export class HttpSecurityInterceptor implements HttpInterceptor {
       return next.handle(request);
 
     const accessToken = this._accessTokenStateService.getToken();
-    return this._apiKeyStateService.getApiKey$().pipe(
+    return this._apiKeyStateService.apiKey$.pipe(
       concatMap(({ apiKey }) => {
         const newRequest = request.clone({
           setHeaders: {
