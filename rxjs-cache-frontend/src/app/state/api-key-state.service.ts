@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { Observable, of, tap } from 'rxjs';
+import { Observable, of, switchMap, timer } from 'rxjs';
 
 import { environment } from '../../environments/environment.development';
 
@@ -9,23 +9,25 @@ import { environment } from '../../environments/environment.development';
   providedIn: 'root',
 })
 export class ApiKeyStateService {
-  // public apiKey$ = this._httpClient.get<{ apiKey: string }>(
-  //   `${environment.baseApiUrl}/api-key`
-  // );
+  private _CACHE_TIME = 10_000;
+  private _apiKey!: string;
 
-  constructor(private _httpClient: HttpClient) {}
-
-  public getApiKey$(): Observable<{ apiKey: string }> {
-    const apiKeyStore = sessionStorage.getItem('API-KEY');
-
-    if (apiKeyStore) return of({ apiKey: apiKeyStore });
-
-    return this._httpClient
-      .get<{ apiKey: string }>(`${environment.baseApiUrl}/api-key`)
-      .pipe(tap(({ apiKey }) => sessionStorage.setItem('API-KEY', apiKey)));
+  constructor(private _httpClient: HttpClient) {
+    timer(0, this._CACHE_TIME)
+      .pipe(
+        switchMap(() =>
+          this._httpClient.get<{ apiKey: string }>(
+            `${environment.baseApiUrl}/api-key`
+          )
+        )
+      )
+      .subscribe(({ apiKey }) => {
+        this._apiKey = apiKey;
+        console.log('==> Refresh the Api Key', apiKey);
+      });
   }
 
-  public invalidateApiKey(): void {
-    sessionStorage.removeItem('API-KEY');
+  public getApiKey$(): Observable<{ apiKey: string }> {
+    return of({ apiKey: this._apiKey });
   }
 }

@@ -1,20 +1,12 @@
 import { Injectable } from '@angular/core';
 import {
-  HttpErrorResponse,
   HttpEvent,
   HttpHandler,
   HttpInterceptor,
   HttpRequest,
 } from '@angular/common/http';
 
-import {
-  catchError,
-  concatMap,
-  Observable,
-  retry,
-  switchMap,
-  throwError,
-} from 'rxjs';
+import { concatMap, Observable } from 'rxjs';
 
 import { ApiKeyStateService } from '../state/api-key-state.service';
 import { AccessTokenStateService } from '../state/access-token-state.service';
@@ -43,36 +35,7 @@ export class HttpSecurityInterceptor implements HttpInterceptor {
             'x-api-key': apiKey,
           },
         });
-
-        return next.handle(newRequest).pipe(
-          catchError((error) => {
-            console.log('==> Error in interceptor:', error);
-
-            if (
-              error instanceof HttpErrorResponse &&
-              (error.status === 401 || error.status === 403)
-            ) {
-              this._apiKeyStateService.invalidateApiKey();
-
-              return this._apiKeyStateService.getApiKey$().pipe(
-                switchMap((newApiKey) => {
-                  const retryRequest = request.clone({
-                    setHeaders: {
-                      Authorization: `Bearer ${accessToken}`,
-                      'x-api-key': newApiKey.apiKey,
-                    },
-                  });
-                  return next.handle(retryRequest);
-                }),
-                retry(2), //* -> Try 2 times
-                catchError((retryError) => {
-                  return throwError(() => retryError);
-                })
-              );
-            }
-            return throwError(() => error);
-          })
-        );
+        return next.handle(newRequest);
       })
     );
   }
