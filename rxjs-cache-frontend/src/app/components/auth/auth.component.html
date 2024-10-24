@@ -1,0 +1,33 @@
+<article class="w-full bg-gray-900 rounded-xl shadow-lg p-8 m-4 md:max-w-sm md:mx-auto">
+  <span class="block w-full text-xl uppercase font-bold mb-4 text-white">
+    Autenticación
+  </span>
+  <div [formGroup]="authForm">
+    <section class="mb-4 md:w-full">
+      <label class="block text-xs mb-1 text-white" for="username">Usuario</label>
+      <input
+        class="w-full border rounded p-2 outline-none focus:shadow-outline bg-gray-700 border-s-gray-700  border-gray-600 placeholder-gray-400 text-white focus:border-indigo-500"
+        id="username"
+        type="text"
+        placeholder="Ingrese su usuario"
+        formControlName="username"
+      />
+    </section>
+    <section class="mb-6 md:w-full">
+      <label class="block text-xs mb-1 text-white" for="password">Contraseña</label>
+      <input
+        class="w-full border rounded p-2 outline-none focus:shadow-outline bg-gray-700 border-s-gray-700  border-gray-600 placeholder-gray-400 text-white focus:border-indigo-500"
+        id="password"
+        type="password"
+        placeholder="Ingrese su contraseña"
+        formControlName="password"
+      />
+    </section>
+    <button
+      class="bg-indigo-600 hover:bg-indigo-700 text-[#f7fff9] uppercase text-sm font-semibold px-4 py-2 rounded"
+      (click)="login()"
+    >
+      Ingresar
+    </button>
+  </div>
+</article>

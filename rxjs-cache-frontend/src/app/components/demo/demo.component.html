@@ -1,0 +1,31 @@
+<article class="w-full bg-gray-900 rounded-xl shadow-lg p-8 m-4 md:max-w-xl md:mx-auto" *ngIf="(accessTokenStateService.token$ | async ) as token">
+  <div class="p-4 mb-4 text-sm  rounded-lg bg-gray-700 text-white overflow-hidden text-ellipsis whitespace-nowrap" role="alert">
+    <span class="font-medium">Access Token: </span> {{ token }}
+  </div>
+  <button
+    class="bg-indigo-600 hover:bg-indigo-700 text-[#f7fff9] uppercase text-sm font-semibold px-4 py-2 rounded mb-3"
+    [ngClass]="{'cursor-not-allowed opacity-[0.7]': token === '-'}"
+    [disabled]="token === '-'"
+    (click)="initTest()"
+  >
+    Iniciar Demo
+  </button>
+
+  <div class="border-dashed border-2 rounded-sm border-gray-500 p-4 max-h-[480px] overflow-y-auto">
+<pre class="mb-2 py-3 px-2 rounded-lg bg-[#c5c4e4] text-[#4934ce] font-semibold"><code>1) this.demoService.getTest().subscribe(console.log)</code></pre>
+<pre class="mb-5 p-2 text-sm rounded-lg bg-gray-700 text-white overflow-hidden"><code>{{ example1 }}</code></pre>
+
+<pre class="mb-2 py-3 px-2 rounded-lg bg-[#c5c4e4] text-[#4934ce] font-semibold"><code>2) this.demoService.getTest().subscribe(console.log)</code></pre>
+<pre class="mb-5 p-2 text-sm rounded-lg bg-gray-700 text-white overflow-hidden"><code>{{ example2 }}</code></pre>
+
+<pre class="mb-2 py-3 px-2 rounded-lg bg-[#c5c4e4] text-[#4934ce] font-semibold"><code>3) setTimeout(() => {{"{"}}
+  this.demoService.getTest().subscribe(console.log)
+{{"}"}}, 1000) <code class="text-gray-600">// Menor al tiempo de caching (10seg)</code></code></pre>
+<pre class="mb-5 p-2 text-sm rounded-lg bg-gray-700 text-white overflow-hidden"><code>{{ example3 }}</code></pre>
+
+<pre class="mb-2 py-3 px-2 rounded-lg bg-[#c5c4e4] text-[#4934ce] font-semibold"><code>4) setTimeout(() => {{"{"}}
+  this.demoService.getTest().subscribe(console.log)
+{{"}"}}, 11_000) <code class="text-gray-600">// Mayor al tiempo de caching (10seg)</code></code></pre>
+<pre class="p-2 text-sm rounded-lg bg-gray-700 text-white overflow-hidden"><code>{{ example4 }}</code></pre>
+  </div>
+</article>
