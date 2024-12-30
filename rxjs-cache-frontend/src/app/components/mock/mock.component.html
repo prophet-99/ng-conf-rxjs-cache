@@ -1,0 +1,8 @@
+<section *ngIf="(jwtStateService.authToken$ | async) as authToken">
+  <p class="text-white text-lg font-semibold mb-3">
+    Authorization Token:
+  </p>
+  <p class="overflow-x-auto text-white max-w-[500px] pb-3">
+    {{ authToken }}
+  </p>
+</section>

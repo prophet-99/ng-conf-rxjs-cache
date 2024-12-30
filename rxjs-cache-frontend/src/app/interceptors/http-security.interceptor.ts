@@ -22,7 +22,7 @@ export class HttpSecurityInterceptor implements HttpInterceptor {
     request: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    const excludeUrls = ['auth/login', 'api-key'];
+    const excludeUrls = ['auth/login', 'api-key', 'auth/refresh-token'];
     if (excludeUrls.some((url) => request.url.includes(url)))
       return next.handle(request);
 

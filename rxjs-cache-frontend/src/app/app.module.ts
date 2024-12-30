@@ -11,11 +11,21 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { AuthComponent } from './components/auth/auth.component';
 import { DemoComponent } from './components/demo/demo.component';
+import { MockComponent } from './components/mock/mock.component';
 import { HttpSecurityInterceptor } from './interceptors/http-security.interceptor';
 
 @NgModule({
-  declarations: [AppComponent, AuthComponent, DemoComponent],
-  imports: [BrowserModule, RouterModule.forRoot([]), ReactiveFormsModule],
+  declarations: [AppComponent, AuthComponent, DemoComponent, MockComponent],
+  imports: [
+    BrowserModule,
+    RouterModule.forRoot([
+      {
+        path: 'mock',
+        component: MockComponent,
+      },
+    ]),
+    ReactiveFormsModule,
+  ],
   providers: [
     provideHttpClient(withInterceptorsFromDi()),
     {

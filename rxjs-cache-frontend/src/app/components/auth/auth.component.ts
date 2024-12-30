@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
-import { AuthService } from '../../services/auth.service';
-import { AccessTokenStateService } from '../../state/access-token-state.service';
+import { JwtStateService } from '../../state/jwt-state.service';
 
 @Component({
   selector: 'app-auth',
@@ -14,8 +14,8 @@ export class AuthComponent implements OnInit {
 
   constructor(
     private _formBuilder: FormBuilder,
-    private _authService: AuthService,
-    private _accessTokenStateService: AccessTokenStateService
+    private _router: Router,
+    private _jwtStateService: JwtStateService
   ) {}
 
   ngOnInit(): void {
@@ -29,8 +29,12 @@ export class AuthComponent implements OnInit {
     if (this.authForm.invalid) return;
     const { username, password } = this.authForm.value;
 
-    this._authService
-      .loginByUsernameAndPassword(username, password)
-      .subscribe((token) => this._accessTokenStateService.setToken(token));
+    this._jwtStateService.authenticate(username, password).subscribe({
+      next: () => {
+        console.log('Success Login');
+        this._router.navigateByUrl('/mock');
+      },
+      error: () => console.error('Failed Login'),
+    });
   }
 }
